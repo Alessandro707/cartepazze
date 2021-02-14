@@ -1,5 +1,7 @@
 package sample;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -8,9 +10,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import javafx.scene.image.Image;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
+
+import javax.imageio.ImageIO;
 
 public interface Net {
 	String WEB_URL = "http://cartepazzedelcirco.altervista.org/";
@@ -79,6 +84,7 @@ public interface Net {
 				player.setPartiteTotali(Integer.parseInt((String)jo.get("total_plays")));
 				player.setVittorie(Integer.parseInt((String)jo.get("wins")));
 				player.setSconfitte(Integer.parseInt((String)jo.get("losses")));
+				//player.setImmagineProfilo(stringToImage((String)jo.get("profile_img"), (String)jo.get("img_format"))); //TODO: c'è qualcosa che non va
 			}
 		} catch (Exception e){
 			MyLogger.error("Can't get the player info from the server. Server msg: " + msg);
@@ -95,10 +101,14 @@ public interface Net {
 			con.setReadTimeout(5000);
 			con.setDoOutput(true);
 			
+			
+			
 			Map<String, String> parameters = new HashMap<>();
 			parameters.put("name", player.getName());
 			parameters.put("password", player.getPassword());
-			parameters.put("profile_img", "0".repeat(500)); // TODO: send img
+			//String img = imageToString("src/res/player/basePlayerImage.png", "png"); // TODO: c'è qualcosa che non va
+			parameters.put("profile_img", "");
+			parameters.put("img_format", "png");
 			
 			DataOutputStream out = new DataOutputStream(con.getOutputStream());
 			out.writeBytes(getParamsString(parameters));
@@ -216,5 +226,130 @@ public interface Net {
 		
 		String resultString = result.toString();
 		return resultString.length() > 0 ? resultString.substring(0, resultString.length() - 1) : resultString;
+	}
+	
+	
+	
+	private static Image stringToImage(String bits, String format){
+		try {
+			byte[] data = new byte[bits.length() / 8];
+			for(int i = 0; i < bits.length() / 8; i++){
+				String temp = bits.substring(i * 8, i * 8 + 8);
+				
+				byte val = 1;
+				if(temp.charAt(0) == '1')
+					val = -1;
+				
+				int v = 64;
+				for(int j = 1; j < temp.length(); j++){
+					if(temp.charAt(j) == '1')
+						val += v;
+					v /= 2;
+				}
+				data[i] = val;
+			}
+			
+			ByteArrayInputStream bis = new ByteArrayInputStream(data);
+			BufferedImage bImage2 = ImageIO.read(bis);
+			ImageIO.write(bImage2, format, new File("src/res/player/profileImage." + format));
+			
+			return new Image("src/res/player/profileImage." + format);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return new Image("src/res/player/basePlayerImage.png");
+	}
+	
+	private static String imageToString(String path, String format){
+		try {
+			/*
+			BufferedImage bImage = ImageIO.read(new File(path));
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			ImageIO.write(bImage, format, bos);
+			byte [] data = bos.toByteArray();
+			
+			String res = "";
+			for(byte b : data){
+				String temp;
+				if(b < 0) {
+					temp = "1";
+					b = (byte)(-b - 1);
+				}
+				else
+					temp = "0";
+				
+				int v = 128;
+				while(temp.length() != 8){
+					if(b - v >= 0){
+						temp = temp.concat("1");
+						v /= 2;
+					}
+					else{
+						temp = temp.concat("0");
+						v /= 2;
+					}
+				}
+				
+				res = res.concat(temp);
+			}
+			return res;
+			*/
+			
+			String res = "";
+			File file = new File(path);
+			BufferedImage img = ImageIO.read(file);
+			for (int y = 0; y < Math.min(img.getHeight(), 335); y++) {
+				for (int x = 0; x < Math.min(img.getWidth(), 335); x++) {
+					Color color = new Color(img.getRGB(x, y), true);
+					int red = color.getRed();
+					int green = color.getGreen();
+					int blue = color.getBlue();
+
+					String r = "";
+					int v = 128;
+					while(r.length() != 8){
+						if(red - v >= 0){
+							r = r.concat("1");
+							v /= 2;
+						}
+						else{
+							r = r.concat("0");
+							v /= 2;
+						}
+					}
+					String g = "";
+					v = 128;
+					while(g.length() != 8){
+						if(green - v >= 0){
+							g = g.concat("1");
+							v /= 2;
+						}
+						else{
+							g = g.concat("0");
+							v /= 2;
+						}
+					}
+					String b = "";
+					v = 128;
+					while(b.length() != 8){
+						if(blue - v >= 0){
+							b = b.concat("1");
+							v /= 2;
+						}
+						else{
+							b = b.concat("0");
+							v /= 2;
+						}
+					}
+					res = res.concat(r + g + b);
+				}
+			}
+			return res;
+			
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return "0".repeat(500);
 	}
 }

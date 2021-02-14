@@ -1,8 +1,15 @@
 package sample;
 
+import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
@@ -169,6 +176,9 @@ public class Player {
 		ImageView imageView = new ImageView(this.immagineProfilo);
 		
 		div.getChildren().addAll(imageView, text);
+		
+		// TODO: when div clicked, open a profile management page (change name, pw, profile img)
+		div.setBackground(new Background(new BackgroundFill(new Color(0, 0, 0, 1), new CornerRadii(0), new Insets(0))));
 		return div;
 	}
 	

@@ -7,7 +7,11 @@ import sample.scenes.Home;
 import sample.scenes.Login;
 import sample.scenes.Register;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileWriter;
 
 public class Main extends Application {
 	public static Stage stage;

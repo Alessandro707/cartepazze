@@ -26,7 +26,7 @@ public class Register extends Group {
 	public Register(){
 		this.text.setFont(new Font(30));
 		this.text.setTranslateY(50 * (float)Main.HEIGHT / 700);
-		this.text.setTranslateX((float)Main.WIDTH / 2 - 40 * (float)Main.WIDTH / 1300);
+		this.text.setTranslateX((float)Main.WIDTH / 2 - 70 * (float)Main.WIDTH / 1300);
 		
 		this.name.setPromptText("Name");
 		this.name.setFont(new Font(25));

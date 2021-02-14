@@ -26,26 +26,26 @@ public class Carta {
 		this.immagine = immagine;
 	}
 	
-	public Group getGraphic(int ratio){
+	public Group getGraphic(float ratio){
 		Group div = new Group();
 		
 		ImageView immagine = new ImageView();
 		Text fieldNome = new Text(), fieldDescrizione = new Text();
-		Rectangle border = new Rectangle(400.0f / ratio, 500.0f / ratio);
+		Rectangle border = new Rectangle(400.0f / ratio * (float)Main.WIDTH / 1300, 500.0f / ratio * (float)Main.HEIGHT / 700);
 		
 		fieldNome.setText(nome.toUpperCase());
 		fieldNome.setFont(new Font(20.0f / ratio));
-		fieldNome.setTranslateX(25.0f / ratio);
-		fieldNome.setTranslateY(35.0f / ratio);
+		fieldNome.setTranslateX(25.0f / ratio * (float)Main.WIDTH / 1300);
+		fieldNome.setTranslateY(35.0f / ratio * (float)Main.HEIGHT / 700);
 		
 		fieldDescrizione.setText(descrizione);
 		fieldDescrizione.setFont(new Font(15.0f / ratio));
-		fieldDescrizione.setTranslateY(375.0f / ratio);
-		fieldDescrizione.setTranslateX(25.0f / ratio);
+		fieldDescrizione.setTranslateY(375.0f / ratio * (float)Main.HEIGHT / 700);
+		fieldDescrizione.setTranslateX(25.0f / ratio * (float)Main.WIDTH / 1300);
 		
-		immagine.setImage(new Image(this.immagine, 350.0f / ratio, 270.0f / ratio, false, true)); // immagini in formato 350 - 270
-		immagine.setTranslateX(25.0f / ratio);
-		immagine.setTranslateY(60.0f / ratio);
+		immagine.setImage(new Image(this.immagine, 350.0f / ratio * (float)Main.WIDTH / 1300, 270.0f / ratio * (float)Main.HEIGHT / 700, false, true)); // immagini in formato 350 - 270
+		immagine.setTranslateX(25.0f / ratio * (float)Main.WIDTH / 1300);
+		immagine.setTranslateY(60.0f / ratio * (float)Main.HEIGHT / 700);
 
 		border.setStroke(Paint.valueOf("#000000"));
 		border.setFill(Paint.valueOf("#ffffffff"));
