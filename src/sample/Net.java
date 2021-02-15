@@ -84,7 +84,7 @@ public interface Net {
 				player.setPartiteTotali(Integer.parseInt((String)jo.get("total_plays")));
 				player.setVittorie(Integer.parseInt((String)jo.get("wins")));
 				player.setSconfitte(Integer.parseInt((String)jo.get("losses")));
-				//player.setImmagineProfilo(stringToImage((String)jo.get("profile_img"), (String)jo.get("img_format"))); //TODO: c'è qualcosa che non va
+				player.setImmagineProfilo(stringToImage((String)jo.get("profile_img"), (String)jo.get("img_format")));
 			}
 		} catch (Exception e){
 			MyLogger.error("Can't get the player info from the server. Server msg: " + msg);
@@ -106,8 +106,8 @@ public interface Net {
 			Map<String, String> parameters = new HashMap<>();
 			parameters.put("name", player.getName());
 			parameters.put("password", player.getPassword());
-			//String img = imageToString("src/res/player/basePlayerImage.png", "png"); // TODO: c'è qualcosa che non va
-			parameters.put("profile_img", "");
+			String img = imageToString("src/res/player/basePlayerImage.png", "png"); // TODO: c'è qualcosa che non va
+			parameters.put("profile_img", img);
 			parameters.put("img_format", "png");
 			
 			DataOutputStream out = new DataOutputStream(con.getOutputStream());
@@ -232,28 +232,17 @@ public interface Net {
 	
 	private static Image stringToImage(String bits, String format){
 		try {
-			byte[] data = new byte[bits.length() / 8];
-			for(int i = 0; i < bits.length() / 8; i++){
-				String temp = bits.substring(i * 8, i * 8 + 8);
-				
-				byte val = 1;
-				if(temp.charAt(0) == '1')
-					val = -1;
-				
-				int v = 64;
-				for(int j = 1; j < temp.length(); j++){
-					if(temp.charAt(j) == '1')
-						val += v;
-					v /= 2;
-				}
-				data[i] = val;
+			bits = bits.substring(0, bits.length() - 1); // remove last : at the end
+			String[] vals = bits.split(":");
+			byte[] data = new byte[vals.length];
+			for(int i = 0; i < vals.length; i++) {
+				data[i] = Byte.parseByte(vals[i]);
 			}
 			
 			ByteArrayInputStream bis = new ByteArrayInputStream(data);
 			BufferedImage bImage2 = ImageIO.read(bis);
 			ImageIO.write(bImage2, format, new File("src/res/player/profileImage." + format));
-			
-			return new Image("src/res/player/profileImage." + format);
+			return new Image("res/player/profileImage." + format, 75 * (float)Main.WIDTH / 1300, 75 * (float)Main.WIDTH / 1300,true, true);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -263,7 +252,6 @@ public interface Net {
 	
 	private static String imageToString(String path, String format){
 		try {
-			/*
 			BufferedImage bImage = ImageIO.read(new File(path));
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			ImageIO.write(bImage, format, bos);
@@ -271,6 +259,19 @@ public interface Net {
 			
 			String res = "";
 			for(byte b : data){
+				res = res.concat(b + ":");
+			}
+			return res;
+			
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return "0".repeat(500);
+	}
+}
+
+
+/*          for(byte b : data){
 				String temp;
 				if(b < 0) {
 					temp = "1";
@@ -292,10 +293,10 @@ public interface Net {
 				}
 				
 				res = res.concat(temp);
-			}
-			return res;
-			*/
-			
+			}*/
+
+
+/*
 			String res = "";
 			File file = new File(path);
 			BufferedImage img = ImageIO.read(file);
@@ -346,10 +347,31 @@ public interface Net {
 				}
 			}
 			return res;
+			*/
+
+
+
+			/*
+			byte[] data = new byte[bits.length() / 8];
+			for(int i = 0; i < bits.length() / 8; i++){
+				String temp = bits.substring(i * 8, i * 8 + 8);
+				
+				byte val = 1;
+				if(temp.charAt(0) == '1')
+					val = -1;
+				
+				int v = 64;
+				for(int j = 1; j < temp.length(); j++){
+					if(temp.charAt(j) == '1')
+						val += v;
+					v /= 2;
+				}
+				data[i] = val;
+			}
 			
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-		return "0".repeat(500);
-	}
-}
+			ByteArrayInputStream bis = new ByteArrayInputStream(data);
+			BufferedImage bImage2 = ImageIO.read(bis);
+			ImageIO.write(bImage2, format, new File("src/res/player/profileImage." + format));
+			
+			return new Image("src/res/player/profileImage." + format);
+			 */

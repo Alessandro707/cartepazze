@@ -178,7 +178,7 @@ public class Player {
 		div.getChildren().addAll(imageView, text);
 		
 		// TODO: when div clicked, open a profile management page (change name, pw, profile img)
-		div.setBackground(new Background(new BackgroundFill(new Color(0, 0, 0, 1), new CornerRadii(0), new Insets(0))));
+		// div.setBackground(new Background(new BackgroundFill(new Color(0, 0, 0, 1), new CornerRadii(0), new Insets(0))));
 		return div;
 	}
 	
