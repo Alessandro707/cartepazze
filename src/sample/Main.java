@@ -42,7 +42,7 @@ public class Main extends Application {
         quit();
     }
     
-    public static void quit(){
+    private static void quit(){
     	Settings.writeSettings();
     }
 }

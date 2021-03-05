@@ -10,7 +10,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import javafx.scene.image.Image;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
@@ -183,6 +182,8 @@ public interface Net {
 		} catch (IOException e) {
 			MyLogger.error("Can't connect to the server: " + Net.WEB_URL + Net.VITTORIA);
 		}
+		
+		MyLogger.info("Successfully updated the player victories");
 	}
 	
 	static void sconfitta(Player player){
@@ -215,6 +216,8 @@ public interface Net {
 		} catch (IOException e) {
 			MyLogger.error("Can't connect to the server: " + Net.WEB_URL + Net.SCONFITTA);
 		}
+		
+		MyLogger.info("Successfully updated the player losses");
 	}
 	
 	static void cambiaNome(Player player){
@@ -229,7 +232,7 @@ public interface Net {
 			
 			Map<String, String> parameters = new HashMap<>();
 			parameters.put("id", player.getId() + "");
-			parameters.put("nome", player.getName() + "");
+			parameters.put("name", player.getName() + "");
 			
 			DataOutputStream out = new DataOutputStream(con.getOutputStream());
 			out.writeBytes(getParamsString(parameters));
@@ -248,6 +251,8 @@ public interface Net {
 		} catch (IOException e) {
 			MyLogger.error("Can't connect to the server: " + Net.WEB_URL + Net.CAMBIA_NOME);
 		}
+		
+		MyLogger.info("Successfully updated the player name");
 	}
 	
 	private static String getParamsString(Map<String, String> params) throws UnsupportedEncodingException {
