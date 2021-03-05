@@ -1,17 +1,19 @@
 package sample;
 
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import sample.scenes.Home;
+import sample.scenes.PlayerManagement;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,17 +26,17 @@ import java.util.ArrayList;
 // alla prima apertura (non c'è il file con l'id) ti chiede di creare un accout, che crea un account su db e hai l'id che viene scritto sul
 // file e alle aperture dopo lo prende dal db
 public class Player {
-	private static Player instance;
-	
 	private String name, password;
 	private int soldi;
-	private Image immagineProfilo;
+	//private Image immagineProfilo;
+	private String formatoImmagine;
+	private String immagine;
 	private int id = -1;
 	private int partiteTotali, vittorie, sconfitte = 0;
 	private float wr;
 	private final ArrayList<Carta> carte = new ArrayList<>();
 	
-	private Player() {
+	public Player() {
 		File file = new File("src/res/player/info");
 		if(file.exists()){
 			init();
@@ -90,6 +92,7 @@ public class Player {
 	
 	public void setName(String name){
 		this.name = name;
+		Net.cambiaNome(this);
 	}
 	
 	public void setPassword(String password){
@@ -108,8 +111,16 @@ public class Player {
 		this.partiteTotali = partiteTotali;
 	}
 	
-	public void setImmagineProfilo(Image immagineProfilo) {
-		this.immagineProfilo = immagineProfilo;
+	//public void setImmagineProfilo(Image immagineProfilo) {
+	//	this.immagineProfilo = immagineProfilo;
+	//}
+	
+	public void setFormatoImmagine(String formato){
+		this.formatoImmagine = formato;
+	}
+	
+	public void setImmagine(String immagine){
+		this.immagine = immagine;
 	}
 	
 	public void setVittorie(int vittorie) {
@@ -132,8 +143,16 @@ public class Player {
 		return soldi;
 	}
 	
-	public Image getImmagineProfilo() {
-		return immagineProfilo;
+	//public Image getImmagineProfilo() {
+	//	return immagineProfilo;
+	//}
+	
+	public String getFormatoImmagine(){
+		return formatoImmagine;
+	}
+	
+	public String getImmagine(){
+		return immagine;
 	}
 	
 	public int getId() {
@@ -156,45 +175,11 @@ public class Player {
 		return wr;
 	}
 	
-	
-	
-	public static Player get(){
-		if(instance == null)
-			instance = new Player();
-		
-		return instance;
+	public ArrayList<Carta> getCarte(){
+		return carte;
 	}
 	
-	public HBox getGraphicsData(){
-		HBox div = new HBox();
-		div.setSpacing(20);
-		
-		Text text = new Text(this.name + " - " + this.soldi + "$");
-		text.setFont(new Font(20));
-		text.setTranslateY(10);
-		
-		ImageView imageView = new ImageView(this.immagineProfilo);
-		
-		div.getChildren().addAll(imageView, text);
-		
-		// TODO: when div clicked, open a profile management page (change name, pw, profile img)
-		// div.setBackground(new Background(new BackgroundFill(new Color(0, 0, 0, 1), new CornerRadii(0), new Insets(0))));
-		return div;
-	}
-	
-	
-	public HBox getGraphicsStats(){
-		HBox div = new HBox();
-	
-		Text text = new Text("wr: " + this.wr + " - carte: " + this.carte.size() / 50 * 100); // TODO: sostituire con tot carte
-		text.setFont(new Font(20));
-		text.setTranslateY(10);
-		
-		div.getChildren().addAll(text);
-		
-		return div;
-	}
-	
+
 	@Override
 	public String toString() {
 		return this.name + " " + this.soldi + "$ - win ratio: " + this.wr + " - partite totali: " + this.partiteTotali;

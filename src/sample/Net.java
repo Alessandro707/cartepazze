@@ -1,6 +1,6 @@
 package sample;
 
-import java.awt.*;
+
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -19,10 +19,8 @@ import javax.imageio.ImageIO;
 
 public interface Net {
 	String WEB_URL = "http://cartepazzedelcirco.altervista.org/";
-	String CREA = "CreaAccount.php";
-	String LEGGI = "LeggiAccount.php";
-	String VITTORIA = "Vittoria.php";
-	String SCONFITTA = "Sconfitta.php";
+	String CREA = "CreaAccount.php", LEGGI = "LeggiAccount.php", VITTORIA = "Vittoria.php", SCONFITTA = "Sconfitta.php";
+	String CAMBIA_NOME = "CambiaNome.php";
 	
 	static void leggiAccount(Player player) {
 		HttpURLConnection con;
@@ -84,7 +82,14 @@ public interface Net {
 				player.setPartiteTotali(Integer.parseInt((String)jo.get("total_plays")));
 				player.setVittorie(Integer.parseInt((String)jo.get("wins")));
 				player.setSconfitte(Integer.parseInt((String)jo.get("losses")));
-				player.setImmagineProfilo(stringToImage((String)jo.get("profile_img"), (String)jo.get("img_format")));
+				//player.setImmagineProfilo(stringToImage((String)jo.get("profile_img"), (String)jo.get("img_format")));
+				if(createImageFromString((String)jo.get("profile_img"), (String)jo.get("img_format"), "src/res/player/", "profileImage")){
+					player.setImmagine("res/player/profileImage." + jo.get("img_format"));
+				}
+				else{
+					player.setImmagine("res/player/basePlayerImage.png");
+				}
+				player.setFormatoImmagine((String)jo.get("img_format"));
 			}
 		} catch (Exception e){
 			MyLogger.error("Can't get the player info from the server. Server msg: " + msg);
@@ -100,8 +105,6 @@ public interface Net {
 			con.setConnectTimeout(5000);
 			con.setReadTimeout(5000);
 			con.setDoOutput(true);
-			
-			
 			
 			Map<String, String> parameters = new HashMap<>();
 			parameters.put("name", player.getName());
@@ -170,7 +173,7 @@ public interface Net {
 			
 			int status = con.getResponseCode();
 			if(status != 200){
-				MyLogger.error("Response code while updating the player info: " + status);
+				MyLogger.error("Response code while updating the player victories: " + status);
 				con.disconnect();
 				Main.stage.close();
 				return;
@@ -202,7 +205,7 @@ public interface Net {
 			
 			int status = con.getResponseCode();
 			if(status != 200){
-				MyLogger.error("Response code while updating the player info: " + status);
+				MyLogger.error("Response code while updating the player losses: " + status);
 				con.disconnect();
 				Main.stage.close();
 				return;
@@ -211,6 +214,39 @@ public interface Net {
 			con.disconnect();
 		} catch (IOException e) {
 			MyLogger.error("Can't connect to the server: " + Net.WEB_URL + Net.SCONFITTA);
+		}
+	}
+	
+	static void cambiaNome(Player player){
+		HttpURLConnection con;
+		try {
+			URL url = new URL(Net.WEB_URL + Net.CAMBIA_NOME);
+			con = (HttpURLConnection) url.openConnection();
+			con.setRequestMethod("POST");
+			con.setConnectTimeout(5000);
+			con.setReadTimeout(5000);
+			con.setDoOutput(true);
+			
+			Map<String, String> parameters = new HashMap<>();
+			parameters.put("id", player.getId() + "");
+			parameters.put("nome", player.getName() + "");
+			
+			DataOutputStream out = new DataOutputStream(con.getOutputStream());
+			out.writeBytes(getParamsString(parameters));
+			out.flush();
+			out.close();
+			
+			int status = con.getResponseCode();
+			if(status != 200){
+				MyLogger.error("Response code while updating the player name: " + status);
+				con.disconnect();
+				Main.stage.close();
+				return;
+			}
+			
+			con.disconnect();
+		} catch (IOException e) {
+			MyLogger.error("Can't connect to the server: " + Net.WEB_URL + Net.CAMBIA_NOME);
 		}
 	}
 	
@@ -228,8 +264,26 @@ public interface Net {
 		return resultString.length() > 0 ? resultString.substring(0, resultString.length() - 1) : resultString;
 	}
 	
-	
-	
+	private static boolean createImageFromString(String bits, String format, String path, String imgName){
+		try {
+			bits = bits.substring(0, bits.length() - 1); // remove last : at the end
+			String[] vals = bits.split(":");
+			byte[] data = new byte[vals.length];
+			for(int i = 0; i < vals.length; i++) {
+				data[i] = Byte.parseByte(vals[i]);
+			}
+			
+			ByteArrayInputStream bis = new ByteArrayInputStream(data);
+			BufferedImage bImage2 = ImageIO.read(bis);
+			ImageIO.write(bImage2, format, new File(path + imgName + "." + format));
+			return true;
+		} catch (IOException e) {
+			MyLogger.error("Can't load the profile image");
+		}
+		
+		return false;
+	}
+	/*
 	private static Image stringToImage(String bits, String format){
 		try {
 			bits = bits.substring(0, bits.length() - 1); // remove last : at the end
@@ -249,6 +303,7 @@ public interface Net {
 		
 		return new Image("src/res/player/basePlayerImage.png");
 	}
+	*/
 	
 	private static String imageToString(String path, String format){
 		try {
@@ -262,9 +317,8 @@ public interface Net {
 				res = res.concat(b + ":");
 			}
 			return res;
-			
 		}catch (Exception e){
-			e.printStackTrace();
+			MyLogger.error("Can't send the user profile image " + path + "." + format + " to the server");
 		}
 		return "0".repeat(500);
 	}

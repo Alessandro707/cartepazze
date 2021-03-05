@@ -83,11 +83,11 @@ public class Register extends Group {
 			this.password.setPromptText("Invalid password: too long / short");
 			return;
 		}
-		Player.get().setName(this.name.getText());
-		Player.get().setPassword(this.password.getText());
+		Main.player.setName(this.name.getText());
+		Main.player.setPassword(this.password.getText());
 		
-		Net.createAccount(Player.get());
-		Player.get().createAccount();
+		Net.createAccount(Main.player);
+		Main.player.createAccount();
 		
 		Main.stage.setScene(new Scene(new Home(), Main.WIDTH, Main.HEIGHT));
 	}

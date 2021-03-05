@@ -70,7 +70,7 @@ public class Login extends Group {
 	}
 	
 	private void login(ActionEvent e){
-		if(this.name.getText().equals(Player.get().getName()) && this.password.getText().equals(Player.get().getPassword())) {
+		if(this.name.getText().equals(Main.player.getName()) && this.password.getText().equals(Main.player.getPassword())) {
 			Settings.setSetting(Settings.SettingOption.REMEMBER_USER, (this.remembered) ? "1" : "0");
 			Main.stage.setScene(new Scene(new Home(), Main.WIDTH, Main.HEIGHT));
 		}

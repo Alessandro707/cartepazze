@@ -14,6 +14,8 @@ public class Main extends Application {
 	public static final int WIDTH = 1300, HEIGHT = 700;
 	public static final int NUMBER_OF_CARDS = 1, NAME_LENGTH = 16, PW_LENGTH = 16, IMG_SIZE = 255;
 	
+	public static final Player player = new Player();
+	
     @Override
     public void start(Stage primaryStage) throws Exception {
     	Settings.initSettings();
