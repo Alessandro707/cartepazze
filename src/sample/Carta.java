@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 public class Carta {
 	private static final ArrayList<Carta> carte = new ArrayList<>();
+	private static final Carta cartaDefault = new Carta("ERROR", "MANY ERRORS", "res/carte/immagini/defaultCard.png");
 	
 	public static final int WIDTH = (int)(400 * (float)Main.WIDTH / 1300), HEIGHT = (int)(500 * (float)Main.HEIGHT / 700);
 	private final String nome, descrizione, immagine;
@@ -31,7 +32,7 @@ public class Carta {
 		
 		ImageView immagine = new ImageView();
 		Text fieldNome = new Text(), fieldDescrizione = new Text();
-		Rectangle border = new Rectangle(400.0f / ratio * (float)Main.WIDTH / 1300, 500.0f / ratio * (float)Main.HEIGHT / 700);
+		Rectangle border = new Rectangle(WIDTH / ratio * (float)Main.WIDTH / 1300, HEIGHT / ratio * (float)Main.HEIGHT / 700);
 		
 		fieldNome.setText(nome.toUpperCase());
 		fieldNome.setFont(new Font(20.0f / ratio));
@@ -57,12 +58,12 @@ public class Carta {
 	}
 	
 	public ImageView getImage(float ratio){
-		return new ImageView(new Image(immagine.replace(".png", "Placed.png"),400.0f / ratio, 500.0f / ratio, false, true));
+		return new ImageView(new Image(immagine.replace(".png", "Placed.png"),WIDTH / ratio, HEIGHT / ratio, false, true));
 	}
 	
 	
 	public enum Size{
-		SMALL(4), MEDIUM(2), BIG(1);
+		SMALL(3), MEDIUM(2), BIG(1);
 		
 		public int ratio;
 		Size(int a) {
@@ -93,7 +94,7 @@ public class Carta {
 		
 		if(ind < carte.size())
 			return carte.get(ind);
-		return null;
+		return cartaDefault;
 	}
 	
 }

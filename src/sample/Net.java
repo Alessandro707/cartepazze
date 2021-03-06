@@ -1,6 +1,5 @@
 package sample;
 
-
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -81,6 +80,7 @@ public interface Net {
 				player.setPartiteTotali(Integer.parseInt((String)jo.get("total_plays")));
 				player.setVittorie(Integer.parseInt((String)jo.get("wins")));
 				player.setSconfitte(Integer.parseInt((String)jo.get("losses")));
+				player.setCarte((String)jo.get("cards_unlocked"));
 				//player.setImmagineProfilo(stringToImage((String)jo.get("profile_img"), (String)jo.get("img_format")));
 				if(createImageFromString((String)jo.get("profile_img"), (String)jo.get("img_format"), "src/res/player/", "profileImage")){
 					player.setImmagine("res/player/profileImage." + jo.get("img_format"));

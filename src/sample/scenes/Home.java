@@ -22,6 +22,7 @@ public class Home extends Group {
 	private final Button play = new Button("PLAY!");
 	private final HBox playerData, playerStats;
 	private final Group cartaDelGiorno;
+	private final Button deck = new Button("Deck");
 	
 	public Home() {
 		titolo.setTranslateY(50);
@@ -48,20 +49,31 @@ public class Home extends Group {
 		stats.setTranslateY(10 * (float)Main.HEIGHT / 700);
 		playerStats.getChildren().addAll(stats);
 		
+		
 		cartaDelGiorno = Objects.requireNonNull(Carta.get(0)).getGraphic(Carta.Size.BIG.ratio);
 		cartaDelGiorno.setTranslateX((float)Main.WIDTH / 2 - (float)Carta.WIDTH / (2 * Carta.Size.BIG.ratio) * (float)Main.WIDTH / 1300);
 		cartaDelGiorno.setTranslateY(80 * (float)Main.HEIGHT / 700);
+		
 		
 		titolo.setTranslateX((float)Main.WIDTH / 2 - 80 * (float)Main.WIDTH / 1300);
 		play.setTranslateX((float)Main.WIDTH / 2 - 50 * (float)Main.WIDTH / 1300);
 		play.setTranslateY(Main.HEIGHT - 100 * (float)Main.HEIGHT / 700);
 		playerStats.setTranslateX((float)Main.WIDTH - 150 * (float)Main.WIDTH / 1300);
 		
-		this.getChildren().addAll(titolo, play, playerData, playerStats, cartaDelGiorno);
+		deck.setFont(play.getFont());
+		deck.setOnAction(this::deck);
+		deck.setTranslateY((float)Main.HEIGHT / 2 - 50 * (float)Main.HEIGHT / 700);
+		deck.setTranslateX((float)Main.HEIGHT / 4 - 50 * (float)Main.WIDTH / 1300);
+		
+		this.getChildren().addAll(titolo, play, playerData, playerStats, cartaDelGiorno, deck);
 	}
 	
 	// search for another player on the server looking for a match (read the first line of the db, first player queuing for a match, & remove it)
 	private void play(ActionEvent e){
 		System.out.println("play");
+	} // TODO: todo: do this
+	
+	private void deck(ActionEvent e){
+		Main.stage.setScene(new Scene(new DeckMenu(), Main.WIDTH, Main.HEIGHT));
 	}
 }

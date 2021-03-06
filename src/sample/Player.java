@@ -20,6 +20,7 @@ public class Player {
 	private int partiteTotali, vittorie, sconfitte = 0;
 	private float wr;
 	private final ArrayList<Carta> carte = new ArrayList<>();
+	private String cards_unlocked;
 	
 	public Player() {
 		File file = new File("src/res/player/info");
@@ -51,7 +52,8 @@ public class Player {
 			
 			Net.leggiAccount(this);
 		} catch (IOException e) {
-			e.printStackTrace();
+			MyLogger.error("Player profile info doesn't exist");
+			Main.stage.close();
 		}
 	}
 	
@@ -120,6 +122,14 @@ public class Player {
 		this.sconfitte = sconfitte;
 	}
 	
+	public void setCarte(String carte){
+		this.cards_unlocked = carte;
+		for(int i = 0; i < Main.NUMBER_OF_CARDS; i++)
+			if(carte.charAt(i) == '1')
+				this.carte.add(Carta.get(i));
+	}
+	
+	
 	public String getName() {
 		return name;
 	}
@@ -166,6 +176,10 @@ public class Player {
 	
 	public ArrayList<Carta> getCarte(){
 		return carte;
+	}
+	
+	public String getCardsString(){
+		return cards_unlocked;
 	}
 	
 
