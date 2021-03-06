@@ -9,7 +9,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import sample.Main;
 import sample.Net;
-import sample.Player;
 import sample.Settings;
 
 

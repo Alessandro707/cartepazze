@@ -42,9 +42,7 @@ public class PlayerManagement extends Group {
 			}
 		});
 		
-		back.setOnAction((ActionEvent e) -> {
-			Main.stage.setScene(new Scene(new Home(), Main.WIDTH, Main.HEIGHT));
-		});
+		back.setOnAction((ActionEvent e) -> Main.stage.setScene(new Scene(new Home(), Main.WIDTH, Main.HEIGHT)));
 		
 		this.getChildren().addAll(nome, immagine, back);
 	}
